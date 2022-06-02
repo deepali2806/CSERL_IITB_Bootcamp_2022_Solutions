@@ -1,0 +1,19 @@
++r
+Starting program: /home/deepali/Documents/CSERL_IITB_Bootcamp_2022_Solutions/Week1_Solutions/week1_warmup/Debugging_with_GDB/a.out 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000055555555523e in main (argc=1, argv=0x7fffffffdc78) at pointers.cpp:13
+13	  cout << *p << endl;
++s
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+The program no longer exists.
++u
+The program is not being run.
++r
+Starting program: /home/deepali/Documents/CSERL_IITB_Bootcamp_2022_Solutions/Week1_Solutions/week1_warmup/Debugging_with_GDB/a.out 
+
+Program received signal SIGSEGV, Segmentation fault.
+0x000055555555523e in main (argc=1, argv=0x7fffffffdc78) at pointers.cpp:13
+13	  cout << *p << endl;
++q
