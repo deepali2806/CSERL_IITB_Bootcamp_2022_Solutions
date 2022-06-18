@@ -9,6 +9,8 @@
 #include <dirent.h>
 #define BLOCKSIZE 100
 
+using namespace std;
+
 vector<string> split(const string &s, char delim) {
   vector<string> elems;
 
@@ -64,8 +66,7 @@ HTTP_Response *handle_request(string req) {
       In this case, requested path is a directory.
       TODO : find the index.html file in that directory (modify the url
       accordingly)
-      */
-
+      */ 
       DIR *dir;
       struct dirent *ent;
       if ((dir = opendir (url.c_str())) != NULL) {
@@ -78,10 +79,6 @@ HTTP_Response *handle_request(string req) {
           }
         }
         closedir (dir);
-      } else {
-        /* could not open directory */
-        perror ("");
-        exit(1);
       }
 
     }
@@ -89,24 +86,24 @@ HTTP_Response *handle_request(string req) {
     /*
     TODO : open the file and read its contents
     */
-    FILE *fptr;
-    fptr = fopen(url.c_str(),"r"); 
-    char readBytes[BLOCKSIZE];
-    // string 
-    while( fgets ( readBytes, BLOCKSIZE, fptr ) != NULL )
-        {
-            printf( "%s" , readBytes ) ;
-        }
-
-    fclose(fptr);
+       ifstream fin;
+       string line;
+       string responseBody;
+       fin.open(url);
+      
+       while (fin) {
+        // Read a Line from File
+        getline(fin, line);
+        responseBody = responseBody + line;
+        // Print line in Console
+        //cout << line << endl;
+      }
 
     /*
     TODO : set the remaining fields of response appropriately
     */
-       string responseBody =  "Testing okay :-)";
-       response->body = responseBody;
        response->content_length =  responseBody.length();
-     
+       response->body = responseBody;
   }
 
   else {
@@ -120,9 +117,6 @@ HTTP_Response *handle_request(string req) {
     string responseBody ="Page Not Found :-)";
     response->content_length =  responseBody.length();
     response->body = responseBody;
-
-
-    
   }
 
   delete request;
@@ -134,6 +128,8 @@ string HTTP_Response::get_string() {
   /*
   TODO : implement this function
   */
-  string responseString = this->HTTP_version + this->status_code + this->status_text + "\n" + this->content_type + this->content_length + this->body;
+  string responseString = this->HTTP_version + " " + 
+                          this->status_code + " " + this->status_text + "\n" + this->content_type + "\n" + this->content_length +
+                          + "\n" + this->body;
   return responseString;
 }

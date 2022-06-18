@@ -19,32 +19,28 @@ void error(char *msg) {
 void *client_handler(void *arg) {
    int clientfd = *((int *) arg);
    printf("\nClient FD Number %d : ", clientfd);
-    char buffer[256];
+   char buffer[256];
 
 
-          if (clientfd < 0)
-            error("ERROR on accept");
+   if (clientfd < 0)
+      error("ERROR on accept");
 
-        /* read message from client */
-          bzero(buffer, 256);
-          int n = read(clientfd, buffer, 255);
-          if (n < 0)
-            error("ERROR reading from socket");
-
-       // string clientReq = string(buffer);
-       HTTP_Response *response = handle_request(buffer);
+   /* read message from client */
+    bzero(buffer, 256);
+    int n = read(clientfd, buffer, 255);
+    if (n < 0)
+      error("ERROR reading from socket");
+    printf ("%s", buffer);
+    // string clientReq = string(buffer);
+    HTTP_Response *response = handle_request(buffer);
         
-        string response_to_Client = response->get_string();
+    string response_to_Client = response->get_string();
 
-          // printf("Here is the message: %s", buffer);
-
-
-          /* send reply to client */
-          n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
-          if (n < 0)
-            error("ERROR writing to socket");
-        
-        
+    /* send reply to client */
+    n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
+    if (n < 0)
+      error("ERROR writing to socket");
+  
  }
 
 
@@ -59,7 +55,7 @@ int main(int argc, char *argv[]) {
     int sockfd, newsockfd, portno;
     socklen_t clilen;
     struct sockaddr_in serv_addr, cli_addr;
-    int n;
+    //int n;
 
     if (argc < 2) {
       fprintf(stderr, "ERROR, no port provided\n");
@@ -91,13 +87,38 @@ int main(int argc, char *argv[]) {
     listen(sockfd, 10);
     clilen = sizeof(cli_addr);
     int i = 0;
-    while (1){
+    //while (1){
 
     /* accept a new request, create a newsockfd */
         newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-        pthread_create(&thread_id, NULL, client_handler, &newsockfd);
+       // pthread_create(&thread_id, NULL, client_handler, &newsockfd);
+
+      char buffer[256];
+
+      int clientfd = newsockfd;
+      
+      if (clientfd < 0)
+          error("ERROR on accept");
+
+      /* read message from client */
+        bzero(buffer, 256);
+        int n = read(clientfd, buffer, 255);
+        if (n < 0)
+          error("ERROR reading from socket");
+        printf ("%s", buffer);
+        // string clientReq = string(buffer);
+        HTTP_Response *response = handle_request(buffer);
+            
+        string response_to_Client = response->get_string();
+
+        /* send reply to client */
+        n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
+        if (n < 0)
+          error("ERROR writing to socket");
+
+
              
-    }
+    //}
     
 
     return 0;
