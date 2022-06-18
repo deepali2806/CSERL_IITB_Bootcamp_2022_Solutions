@@ -35,7 +35,8 @@ void *client_handler(void *arg) {
     HTTP_Response *response = handle_request(buffer);
         
     string response_to_Client = response->get_string();
-
+    cout<<"\nFile contents :-"<<endl;
+    cout<<response_to_Client<<endl;
     /* send reply to client */
     n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
     if (n < 0)
@@ -87,16 +88,17 @@ int main(int argc, char *argv[]) {
     listen(sockfd, 10);
     clilen = sizeof(cli_addr);
     int i = 0;
-    //while (1){
+    while (1){
 
     /* accept a new request, create a newsockfd */
-        newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
+      newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
        // pthread_create(&thread_id, NULL, client_handler, &newsockfd);
 
       char buffer[256];
 
       int clientfd = newsockfd;
-      
+      cout<<"Client ID ::"<<clientfd<<endl;
+
       if (clientfd < 0)
           error("ERROR on accept");
 
@@ -111,6 +113,9 @@ int main(int argc, char *argv[]) {
             
         string response_to_Client = response->get_string();
 
+      //  cout<<"\nFile contents :-"<<endl;
+      //   cout<<response_to_Client<<endl;
+
         /* send reply to client */
         n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
         if (n < 0)
@@ -118,7 +123,7 @@ int main(int argc, char *argv[]) {
 
 
              
-    //}
+    }
     
 
     return 0;

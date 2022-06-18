@@ -86,6 +86,7 @@ HTTP_Response *handle_request(string req) {
     /*
     TODO : open the file and read its contents
     */
+      cout<<"\n\nURL:: "<< url <<endl;
        ifstream fin;
        string line;
        string responseBody;
@@ -98,11 +99,12 @@ HTTP_Response *handle_request(string req) {
         // Print line in Console
         //cout << line << endl;
       }
-
+        //cout<<"Printing File contents"<<endl;
+       // cout<<" :- "<<responseBody<<endl;
     /*
     TODO : set the remaining fields of response appropriately
     */
-       response->content_length =  responseBody.length();
+       response->content_length =  to_string(responseBody.length());
        response->body = responseBody;
   }
 
@@ -115,7 +117,7 @@ HTTP_Response *handle_request(string req) {
     response->content_type = "text/html";
 
     string responseBody ="Page Not Found :-)";
-    response->content_length =  responseBody.length();
+    response->content_length =  to_string(responseBody.length());
     response->body = responseBody;
   }
 
@@ -128,8 +130,9 @@ string HTTP_Response::get_string() {
   /*
   TODO : implement this function
   */
-  string responseString = this->HTTP_version + " " + 
-                          this->status_code + " " + this->status_text + "\n" + this->content_type + "\n" + this->content_length +
-                          + "\n" + this->body;
+  string responseString = this->HTTP_version + " " + this->status_code + " " + this->status_text + "\r\n"
+		      + "Content-Type: " + this->content_type + "\r\n" 
+		      + "Content-Length: " + this->content_length + "\r\n\r\n"
+		      + this->body;
   return responseString;
 }
