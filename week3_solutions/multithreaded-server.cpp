@@ -19,28 +19,33 @@ void error(char *msg) {
 void *client_handler(void *arg) {
    int clientfd = *((int *) arg);
    printf("\nClient FD Number %d : ", clientfd);
-   char buffer[256];
 
+      char buffer[256];
 
-   if (clientfd < 0)
-      error("ERROR on accept");
+    //  int clientfd = newsockfd;
+     // cout<<"Client ID ::"<<clientfd<<endl;
 
-   /* read message from client */
-    bzero(buffer, 256);
-    int n = read(clientfd, buffer, 255);
-    if (n < 0)
-      error("ERROR reading from socket");
-    printf ("%s", buffer);
-    // string clientReq = string(buffer);
-    HTTP_Response *response = handle_request(buffer);
+      if (clientfd < 0)
+          error("ERROR on accept");
+
+      /* read message from client */
+        bzero(buffer, 256);
+        int n = read(clientfd, buffer, 255);
+        if (n < 0)
+          error("ERROR reading from socket");
         
-    string response_to_Client = response->get_string();
-    cout<<"\nFile contents :-"<<endl;
-    cout<<response_to_Client<<endl;
-    /* send reply to client */
-    n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
-    if (n < 0)
-      error("ERROR writing to socket");
+        printf ("%s", buffer);
+        // string clientReq = string(buffer);
+        HTTP_Response *response = handle_request(buffer);
+            
+        string response_to_Client = response->get_string();
+
+        /* send reply to client */
+        n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
+        if (n < 0)
+          error("ERROR writing to socket");
+
+
   
  }
 
@@ -92,7 +97,7 @@ int main(int argc, char *argv[]) {
 
     /* accept a new request, create a newsockfd */
       newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-       // pthread_create(&thread_id, NULL, client_handler, &newsockfd);
+      //pthread_create(&thread_id, NULL, client_handler, &newsockfd);
 
       char buffer[256];
 
@@ -107,14 +112,12 @@ int main(int argc, char *argv[]) {
         int n = read(clientfd, buffer, 255);
         if (n < 0)
           error("ERROR reading from socket");
+        
         printf ("%s", buffer);
         // string clientReq = string(buffer);
         HTTP_Response *response = handle_request(buffer);
             
         string response_to_Client = response->get_string();
-
-      //  cout<<"\nFile contents :-"<<endl;
-      //   cout<<response_to_Client<<endl;
 
         /* send reply to client */
         n = write(clientfd, response_to_Client.c_str(), response_to_Client.length());
